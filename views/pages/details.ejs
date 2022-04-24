@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+    <p>First name: <%=account.lname%>
+    </p>
+    <p>Last name: <%=account.lname%>
+    </p>
+    <p>
+        Scientific Disciplines:<% account.scientificDisciplines.forEach(function(element)
+            { %>
+            <b><%= element %>,</b>     
+            <% }) %>
+    </p>
+    <p>
+        Tags:<% account.tags.forEach(function(element)
+            { %>
+            <b><%= element %>,</b>     
+            <% }) %>
+    </p>
+    <p> Current affiliation: <%= account.org%> </p>
+    <p> Bio: <%= account.bio%> </p>
+    <p> Proof of affiliation: <%= account.proof%> </p>
+    <p>
+        <p> Google Scholar: <%= account.researchProfiles.googleScholar%></p>
+        <p> Research Gate: <%= account.researchProfiles.researchGate%></p>
+        <p> Linked In: <%= account.researchProfiles.linkedIn%></p>
+        <p> ORCID: <%= account.researchProfiles.ORCID%></p> 
+    </p>
+    
+</body>
+
+</html>
