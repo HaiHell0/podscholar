@@ -180,9 +180,16 @@ app.get("/api", function(req,res){
 })
 
 app.get("/api/search/keyword/:keyword", function(req,res){
-    db.collection("podcasts").find({keywords:req.params.keyword}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
-        console.log(resp)
-        res.json(resp);
+    db.collection("podcasts").find().sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        keyword = req.params.keyword;
+        let results = [];
+        resp.forEach((podcast) => {
+            if (
+                podcast.keywords.includes(keyword)||podcast.title.split(" ").includes(keyword)||podcast.authors.includes(keyword)
+            )results.push(podcast);
+        })
+        //console.log(results)
+        res.json(results);
     });
 })
 app.get("/api/search/date/:month/:day/:year", function(req,res){
