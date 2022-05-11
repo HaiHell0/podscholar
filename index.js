@@ -3,13 +3,13 @@ const express = require('express')
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
-const ObjectId = require("mongodb").ObjectID;
+const ObjectId = require("mongodb").ObjectId;
 
 
-const ID = "123";
-const PASSWORD = "123";
-const DATABASE = "myFirstDatabase";
-const NET = "asecourses.d1pmm.mongodb.net";
+const ID = "user";
+const PASSWORD = "1";
+const DATABASE = "ase220";
+const NET = "cluster0.c6lhm.mongodb.net";
 
 const URL = `mongodb+srv://${ID}:${PASSWORD}@${NET}/${DATABASE}?retryWrites=true&w=majority`
 
@@ -119,50 +119,52 @@ app.get('/logout', (req, res) => {
 
 
 
-// app.post('/user', (req, res) => {
-//     if (req.body.username == demousername && req.body.password == demopasswd) {
-//         session = req.session;
-//         session.userid = req.body.username;
-//         console.log(req.session)
-//         res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
-//     }
-//     else {
-//         res.send('Invalid username or password');
-//     }
-// })
+app.post('/user', (req, res) => {
+    if (req.body.username == demousername && req.body.password == demopasswd) {
+        session = req.session;
+        session.userid = req.body.username;
+        console.log(req.session)
+        res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
+    }
+    else {
+        res.send('Invalid username or password');
+    }
+})
 
 
 
 
-// app.get('/pages', (req, resp) => {
-//     resp.send('ok')
-// });
+app.get('/pages', (req, resp) => {
+    resp.send('ok')
+});
 
-// app.get('/pages/:pagename', (req, resp) => {
-//     resp.render(`pages/${req.params.pagename}`)
-// });
+app.get('/pages/:pagename', (req, resp) => {
+    console.log(`pages/${req.params.pagename}`)
+    resp.render(`pages/${req.params.pagename}`)
+    
+});
 
 
 
 
-// app.get('/:account', function (req, resp) {
-//     db.collection('accounts').findOne({ aname: req.params.account }, function (error, res) {
-//         if (error) resp.send('404 not found');
-//         else if (res == null) resp.send('Account not found')
-//         else {
-//             console.log(res)
-//             resp.render('pages/test', { account: res })
-//         }
-//     })
-// });
+app.get('/account/:account', function (req, resp) {
+    db.collection('accounts').findOne({ aname: req.params.account }, function (error, res) {
+        if (error) resp.send('404 not found');
+        else if (res == null) resp.send('Account not found')
+        else {
+            console.log(res)
+            resp.render('pages/account', { account: res })
+        }
+    })
+});
 
-// app.get('/:account/details', function (req, resp) {
-//     db.collection('accounts').findOne({ aname: req.params.account }, function (error, res) {
-//         if (error) resp.send('404 not found');
-//         else if (res == null) resp.send('Account not found')
-//         else {
-//             console.log(res)
-//             resp.render('pages/details', { account: res })
-//         }
-//     })
-// });
+app.get('/account/:account/details', function (req, resp) {
+    db.collection('accounts').findOne({ aname: req.params.account }, function (error, res) {
+        if (error) resp.send('404 not found');
+        else if (res == null) resp.send('Account not found')
+        else {
+            console.log(res)
+            resp.render('pages/details', { account: res })
+        }
+    })
+});
