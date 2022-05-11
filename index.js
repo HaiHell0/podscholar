@@ -8,7 +8,7 @@ const ObjectId = require("mongodb").ObjectId;
 
 const ID = "user";
 const PASSWORD = "1";
-const DATABASE = "ase220";
+const DATABASE = "podscholar";
 const NET = "cluster0.c6lhm.mongodb.net";
 
 const URL = `mongodb+srv://${ID}:${PASSWORD}@${NET}/${DATABASE}?retryWrites=true&w=majority`
@@ -146,7 +146,7 @@ app.get('/pages/:pagename', (req, resp) => {
 
 
 
-
+/*
 app.get('/account/:account', function (req, resp) {
     db.collection('accounts').findOne({ aname: req.params.account }, function (error, res) {
         if (error) resp.send('404 not found');
@@ -168,3 +168,31 @@ app.get('/account/:account/details', function (req, resp) {
         }
     })
 });
+*/
+//========================================================================
+//API routes start
+//========================================================================
+app.get("/api", function(req,res){
+    db.collection("podcasts").find().sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        console.log(resp)
+        res.json(resp);
+    });
+})
+
+app.get("/api/search/keyword/:keyword", function(req,res){
+    db.collection("podcasts").find({keywords:req.params.keyword}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        console.log(resp)
+        res.json(resp);
+    });
+})
+app.get("/api/search/date/:month/:day/:year", function(req,res){
+    date = `${req.params.month}/${req.params.day}/${req.params.year}`
+    db.collection("podcasts").find({publishDate:date}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        console.log(resp)
+        res.json(resp);
+    });
+})
+
+//========================================================================
+//API routes end
+//========================================================================
