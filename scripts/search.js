@@ -71,6 +71,7 @@ $(document).on("click", "#like", function (e) {
 });
 $("#search-text-field").keypress(function (event) {
   var keycode = event.keyCode || event.which;
+  
   if (keycode == "13") {
     search($("#search-text-field").val());
   }

@@ -1,8 +1,6 @@
 const MongoClient = require('mongodb').MongoClient;
 const express = require('express')
 const bodyParser = require("body-parser");
-const cookieParser = require("cookie-parser");
-const sessions = require('express-session');
 const ObjectId = require("mongodb").ObjectId;
 
 
@@ -22,24 +20,13 @@ MongoClient.connect(URL, { useUnifiedTopology: true }, function (error, client) 
 
 const PORT = process.env.PORT || 5500
 
-const demousername = 'user'
-const demopasswd = '1'
-var session = "h";
 
 const app = express();
 app.use(express.json())
-app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
 app.set('view engine', 'ejs');
-//Express-session options
-const oneDay = 1000 * 60 * 60 * 24
-app.use(sessions({
-    secret: "abcdefg",
-    saveUninitialized: true,
-    cookie: { maxAge: oneDay },
-    resave: false
-}))
+
 
 
 
@@ -119,18 +106,6 @@ app.get('/logout', (req, res) => {
 
 
 
-app.post('/user', (req, res) => {
-    if (req.body.username == demousername && req.body.password == demopasswd) {
-        session = req.session;
-        session.userid = req.body.username;
-        console.log(req.session)
-        res.send(`Hey there, welcome <a href=\'/logout'>click to logout</a>`);
-    }
-    else {
-        res.send('Invalid username or password');
-    }
-})
-
 
 
 
@@ -200,6 +175,33 @@ app.get("/api/search/date/:month/:day/:year", function(req,res){
     });
 })
 
+app.get("/api/categories", async function(req,res){
+    const disciplineArray = await db.collection("podcasts").distinct("journal");
+    
+    console.log(disciplineArray);
+    res.send(disciplineArray)
+    //res.render("pages/test",{data:disciplineArray});
+})
+
+app.get("/api/categories/:scientificdiscipline", function(req,res){
+    db.collection("podcasts").find({journal:req.params.scientificdiscipline}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        console.log(resp);
+        res.json(resp);
+    })
+})
+app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", function(req,res){
+    date = `${req.params.month}/${req.params.day}/${req.params.year}`
+    db.collection("podcasts").find({journal:req.params.scientificdiscipline,publishDate:date}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        console.log(resp);
+        res.json(resp);
+    })
+})
+app.get("/api/categories/:scientificdiscipline/search/date/:date", function(req,res){
+    db.collection("podcasts").find({journal:req.params.scientificdiscipline,keywords:req.params.keyword}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        console.log(resp);
+        res.json(resp);
+    })
+})
 //========================================================================
 //API routes end
 //========================================================================
