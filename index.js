@@ -44,8 +44,8 @@ app.get('/pages/:pagename', (req, resp) => {
 });
 
 //podcast route
-app.get("/pages/podcasts/:keyword", async function(req,res){
-    res.render("/pages/podcasts",{data:"x"});
+app.get("/pages/podcasts/:id", function(req,res){
+        res.render("pages/podcasts",{data:req.params.id});
 })
 
 
@@ -170,6 +170,12 @@ app.get("/api", function(req,res){
         console.log(resp)
         res.json(resp);
     });
+})
+
+app.get("/api/podcast/search/:id", function(req,res){
+        db.collection("podcasts").find({id:parseInt(req.params.id)}).toArray(function (error, resp) {
+            res.json(resp);
+    })
 })
 
 

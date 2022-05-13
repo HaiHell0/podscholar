@@ -8,13 +8,13 @@ function podcastArrayToString(res,num){
         });
         var tagString = ""; 
         podcast.keywords.forEach((tag) => {
-            tagString += `<a href="#"><span class="btn btn-dark btn-sm label label-info">${tag}</span></a>`;
+            tagString += `<a href="/pages/keywordTag/${tag}"><span class="btn btn-dark btn-sm label label-info">${tag}</span></a>`;
           });
         //console.log(authorsString)
         $("#search-results").append(
 `
           <div class="item col-md-6 mx-auto m-3 p-4 bg-light">
-            <p class="fs-5"><strong>${podcast.title}</strong></p>
+            <p class="fs-5"><strong><a class="text-decoration-none text-reset" href="/pages/podcasts/${podcast.id}">${podcast.title}</a></strong></p>
             <div>
               <p><strong>By: </strong>${authorsString}</p>
               <p><strong>Journal: </strong>${podcast.journal}</p>
