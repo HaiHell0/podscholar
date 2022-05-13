@@ -2,7 +2,6 @@ function podcastArrayToString(res,num){
     if (num==0) num = res.length;
     for (var i = 0; i < num; i++) {
         var podcast = res[i];
-        console.log(podcast)
         var authorsString = "";
         podcast.authors.forEach((author) => {
           authorsString += `<a class="text-dark" href="author.html?index=${author}">${author}</a>\t`;

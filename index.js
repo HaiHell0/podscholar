@@ -19,10 +19,10 @@ MongoClient.connect(URL, { useUnifiedTopology: true }, function (error, client) 
 });
 const PORT = process.env.PORT || 5500
 
+app = express();
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
-app.use(cookieParser());
 app.set('view engine', 'ejs');
 app.listen(PORT, function () {
     console.log(`App is listening on port ${PORT}`)
@@ -43,6 +43,11 @@ app.get('/pages/:pagename', (req, resp) => {
 
 });
 
+//keywords route
+app.get('keywords/:tag',(req,res)=>{
+    res.render(keywordsTag,{data:req.params.tag})
+})
+
 //AUTHENTICATION
 app.get('/auth/signup', (req, res) => {
     if (req.session.userid) {
@@ -62,6 +67,7 @@ app.get('/auth/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
+
 
 //AUTHOR ACCOUNT APPROVAL
 app.get('/authors/create', (req, res) => {
@@ -174,15 +180,19 @@ app.get("/api/search/date/:month/:day/:year", function(req,res){
 })
 
 app.get("/api/categories", async function(req,res){
+    array = [];
     const pipeline = [
-        { $group: {category : "$journal", count: { $sum: 1 } } }
+        { $group: {_id : "$journal", count: { $sum: 1 } } }
     ];
     const aggCursor = db.collection("podcasts").aggregate(pipeline);
     for await (const doc of aggCursor) {
-        console.log(doc);
+        array.push(doc)
     }
+    console.log(array)
+    res.json(array)
     //res.render("pages/test",{data:disciplineArray});
 })
+
 
 app.get("/api/categories/:scientificdiscipline", function(req,res){
     db.collection("podcasts").find({journal:req.params.scientificdiscipline}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
@@ -199,10 +209,17 @@ app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", f
 })
 
 app.get("/api/keywords", async function(req,res){
-    const keywordArray = await db.collection("podcasts").distinct("keywords");
-    
-    console.log(keywordArray);
-    res.send(keywordArray)
+    array = [];
+    const pipeline = [
+        {$unwind:"$keywords"},
+        { $group: {_id : "$keywords", count: { $sum: 1 } } }
+    ];
+    const aggCursor = db.collection("podcasts").aggregate(pipeline);
+    for await (const doc of aggCursor) {
+        array.push(doc)
+    }
+    console.log(array)
+    res.json(array)
     //res.render("pages/test",{data:disciplineArray});
 })
 app.get("/api/keywords/:keyword", function(req,res){
