@@ -176,10 +176,13 @@ app.get("/api/search/date/:month/:day/:year", function(req,res){
 })
 
 app.get("/api/categories", async function(req,res){
-    const disciplineArray = await db.collection("podcasts").distinct("journal");
-    
-    console.log(disciplineArray);
-    res.send(disciplineArray)
+    const pipeline = [
+        { $group: {category: "$journal", count: { $sum: 1 } } }
+    ];
+    const aggCursor = db.collection("podcasts").aggregate(pipeline);
+    for await (const doc of aggCursor) {
+        console.log(doc);
+    }
     //res.render("pages/test",{data:disciplineArray});
 })
 
@@ -196,12 +199,29 @@ app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", f
         res.json(resp);
     })
 })
-app.get("/api/categories/:scientificdiscipline/search/date/:date", function(req,res){
-    db.collection("podcasts").find({journal:req.params.scientificdiscipline,keywords:req.params.keyword}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+
+app.get("/api/keywords", async function(req,res){
+    const keywordArray = await db.collection("podcasts").distinct("keywords");
+    
+    console.log(keywordArray);
+    res.send(keywordArray)
+    //res.render("pages/test",{data:disciplineArray});
+})
+app.get("/api/keywords/:keyword", function(req,res){
+    db.collection("podcasts").find({keywords:req.params.keyword}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
         console.log(resp);
         res.json(resp);
     })
 })
+
+app.get("/api/keywords/:keyword/search/date/:month/:day/:year", function(req,res){
+    date = `${req.params.month}/${req.params.day}/${req.params.year}`
+    db.collection("podcasts").find({keywords:req.params.scientificdiscipline,publishDate:date}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+        console.log(resp);
+        res.json(resp);
+    })
+})
+
 //========================================================================
 //API routes end
 //========================================================================

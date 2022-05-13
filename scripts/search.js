@@ -1,3 +1,37 @@
+$("#keywords").html("");
+$.ajax(`/api/keywords`, {
+    type: "GET",
+    dataType: "json",
+    success: function (res) {
+        console.log(res)
+        res.forEach((keyword)=>{ $("#keywords").append(`
+        <li><a href="#" class="btn link-dark rounded">${keyword} </a>
+        </li>
+        `)})
+    },
+    error: function (errorMessage) {
+    console.log("Error" + errorMessage);
+    },
+});
+
+$("#categories").html("");
+$.ajax(`/api/categories`, {
+    type: "GET",
+    dataType: "json",
+    success: function (res) {
+        console.log(res)
+        res.forEach((categories)=>{ $("#categories").append(`
+        <li><a href="#" class="btn link-dark rounded">${categories} </a>
+        </li>
+        `)})
+    },
+    error: function (errorMessage) {
+    console.log("Error" + errorMessage);
+    },
+});
+
+
+
 console.log("Search.js is being used");
 function search(search) {
   $("#search-results").html("");

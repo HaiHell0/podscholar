@@ -1,5 +1,4 @@
 
-
 console.log("index.js is being used");
 function index() {
   $.ajax(`/api`, {
