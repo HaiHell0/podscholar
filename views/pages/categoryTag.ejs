@@ -20,10 +20,10 @@
 
   <header class="row mt-4">
     <div class="col-6 mx-auto">
-      <h1 class="mb-4 text-center">PodScholar Tags</h1>
+      <h1 class="mb-4 text-center">Podcasts with the tag <%= data%></h1>
     </div>
   </header>
-    <div id="search-results"></div>
+  <div id ="search-results"></div>
 
   <div>
     <%- include('footer.html') %>
@@ -36,7 +36,19 @@
   integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
 <script type="text/javascript" src="../../scripts/session.js"></script>
 <script type="text/javascript" src="../../scripts/podcast.js"></script>
-<script type="text/javascript" src="../../scripts/keywords.js"></script>
+<script>
+$.ajax(`/api/categories/<%= data%>`, {
+    type: "GET",
+    dataType: "json",
+    success: function (res) {
+      podcastArrayToString(res,0)
+    },
+    error: function (errorMessage) {
+      console.log("Error" + errorMessage);
+    },
+  });
+
+</script>
 
 
 </html>

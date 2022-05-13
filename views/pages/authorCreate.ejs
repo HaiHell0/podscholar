@@ -19,10 +19,10 @@
 <body>
     <%- include('nav.html') %>
     <h5 class="text-center mt-4">Welcome to PodScholar!</h5>
-    <h5 class="text-center">Please provide additional information below to become an author of PodScholar</h5>
+    <h5 class="text-center">Please provide additional information below</h5>
     <div class="row mt-3">
         <div class="col-md-6 mx-auto">
-            <form action="/api/authors/create/<%= user._id %>" method="POST" class="bg-white">
+            <form action="/author/create/<%= user._id %>" method="POST" class="bg-white">
                 <div class="p-5 p-lg-5 border border-dark">
                     <div class="form-group row" hidden>
                         <div class="col-md-12">
@@ -50,15 +50,6 @@
                                 value="<%= user.lname %>" />
                         </div>
                     </div>
-                    <!-- <div class="form-group row">
-                        <div class="col-md-12">
-                            <div class="mb-3">
-                                <label for="formFile" class="form-label">Upload profile picture</label>
-                                <input class="form-control" type="file" id="image" accept=".jpg, .png, .jpeg">
-                                implement size limit/ file type in js later, not required yet
-                            </div>
-                        </div>
-                    </div> -->
                     <div class="form-group row" hidden>
                         <div class="col-md-12">
                             <label class="text-black">Scientific Disciplines <span class="text-danger">*</span></label>
@@ -78,7 +69,7 @@
                     <div class="form-group row">
                         <div class="col-md-12">
                             <label class="text-black">Current Affiliation <span class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id="" name="affiliation"
+                            <input type="text" class="form-control border border-dark" id="" name="affiliation"
                                 placeholder="" />
                         </div>
                     </div>
@@ -86,7 +77,7 @@
                         <div class="col-md-12">
                             <label class="text-black">Email at academic organziation<span
                                     class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id="" name="orgemail"
+                            <input type="text" class="form-control border border-dark" id="" name="org-email"
                                 placeholder="" />
                         </div>
                     </div>
@@ -94,14 +85,14 @@
                         <div class="col-md-12">
                             <label class="text-black">Proof of academic affiliation<span
                                     class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id="" name="affproof"
+                            <input type="text" class="form-control border border-dark" id="" name="aff-proof"
                                 placeholder="" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-12">
                             <label class="text-black">Bio<span class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id="" name="bio"
+                            <input type="text" class="form-control border border-dark" id="" name="bio"
                                 placeholder="" />
                         </div>
                     </div>
@@ -109,23 +100,21 @@
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label class="text-black">Google Scholar <span class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id=""
-                                name="googlescholar" />
+                            <input type="text" class="form-control border border-dark" id="" name="google-scholar" />
                         </div>
                         <div class="col-md-6">
                             <label class="text-black">ResearchGate <span class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id=""
-                                name="researchgate" />
+                            <input type="text" class="form-control border border-dark" id="" name="research-gate" />
                         </div>
                     </div>
                     <div class="form-group row">
                         <div class="col-md-6">
                             <label class="text-black">LinkedIn <span class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id="" name="linkedin" />
+                            <input type="text" class="form-control border border-dark" id="" name="linkedin" />
                         </div>
                         <div class="col-md-6">
                             <label class="text-black">ORCID <span class="text-danger">*</span></label>
-                            <input required type="text" class="form-control border border-dark" id="" name="orcid" />
+                            <input type="text" class="form-control border border-dark" id="" name="orcid" />
                         </div>
                     </div>
                     <div class="form-group row mt-3">
@@ -134,16 +123,19 @@
                                 <input type="submit" class="btn btn-dark" value="Submit" />
                             </div>
                         </div>
-                        <div class="col-md-2 mt-3">
+                        <!-- <div class="col-md-2 mt-3">
                             <div class="col-lg-12">
                                 <input type="button" class="btn btn-dark" value="Provide later" id="skip" />
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                 </div>
             </form>
         </div>
+    </div>
+    <div>
+        <%- include('footer.html') %>
     </div>
 </body>
 <script>

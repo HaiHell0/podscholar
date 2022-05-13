@@ -5,7 +5,7 @@ $.ajax(`/api/keywords`, {
     success: function (res) {
         console.log(res)
         res.forEach((keyword)=>{ $("#keywords").append(`
-        <li><a href="#" class="btn link-dark rounded">${keyword} </a>
+        <li><a href="/pages/keywordTag/${keyword._id}" class="btn link-dark rounded">${keyword._id}</a><div class="btn btn-sm btn-secondary rounded">${keyword.count}</div>
         </li>
         `)})
     },
@@ -21,7 +21,7 @@ $.ajax(`/api/categories`, {
     success: function (res) {
         console.log(res)
         res.forEach((categories)=>{ $("#categories").append(`
-        <li><a href="#" class="btn link-dark rounded">${categories} </a>
+        <li><a href="/pages/categoryTag/${categories._id}" class="btn link-dark rounded">${categories._id} </a><div class="btn btn-sm btn-secondary rounded">${categories.count}</div>
         </li>
         `)})
     },

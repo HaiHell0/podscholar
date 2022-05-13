@@ -44,8 +44,12 @@ app.get('/pages/:pagename', (req, resp) => {
 });
 
 //keywords route
-app.get('keywords/:tag',(req,res)=>{
-    res.render(keywordsTag,{data:req.params.tag})
+app.get('/pages/keywordTag/:tag',(req,res)=>{
+    res.render("pages/keywordTag",{data:req.params.tag})
+})
+//category route
+app.get('/pages/categoryTag/:tag',(req,res)=>{
+    res.render("pages/categoryTag",{data:req.params.tag})
 })
 
 //AUTHENTICATION
@@ -184,8 +188,8 @@ app.get("/api/categories", async function(req,res){
     const pipeline = [
         { $group: {_id : "$journal", count: { $sum: 1 } } }
     ];
-    const aggCursor = db.collection("podcasts").aggregate(pipeline);
-    for await (const doc of aggCursor) {
+    const aggCursor = await db.collection("podcasts").aggregate(pipeline);
+    for await (doc of aggCursor) {
         array.push(doc)
     }
     console.log(array)
@@ -209,17 +213,17 @@ app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", f
 })
 
 app.get("/api/keywords", async function(req,res){
-    array = [];
-    const pipeline = [
+    array1 = [];
+    const pipeline1 = [
         {$unwind:"$keywords"},
         { $group: {_id : "$keywords", count: { $sum: 1 } } }
     ];
-    const aggCursor = db.collection("podcasts").aggregate(pipeline);
-    for await (const doc of aggCursor) {
-        array.push(doc)
+    const aggCursor1 = await db.collection("podcasts").aggregate(pipeline1);
+    for await (doc of aggCursor1) {
+        array1.push(doc)
     }
-    console.log(array)
-    res.json(array)
+    console.log(array1)
+    res.json(array1)
     //res.render("pages/test",{data:disciplineArray});
 })
 app.get("/api/keywords/:keyword", function(req,res){
