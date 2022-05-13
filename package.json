@@ -12,11 +12,14 @@
   "dependencies": {
     "axios": "^0.27.2",
     "body-parser": "^1.20.0",
+    "bootstrap-icons": "^1.8.1",
+    "connect-mongo": "^4.6.0",
     "cookie-parser": "^1.4.6",
     "css": "^3.0.0",
     "ejs": "^3.1.7",
     "express": "^4.17.3",
     "express-session": "^1.17.2",
+    "i": "^0.3.7",
     "js": "^0.1.0",
     "mongodb": "^4.5.0",
     "nodemon": "^2.0.15"
