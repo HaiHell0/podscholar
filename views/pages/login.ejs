@@ -59,7 +59,7 @@
         e.preventDefault();
         axios({
             method: 'post',
-            url: '/login',
+            url: '/api/auth/signin',
             data: {
                 email: email.value,
                 password: password.value,
