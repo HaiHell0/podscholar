@@ -1,7 +1,10 @@
 const MongoClient = require('mongodb').MongoClient;
 const express = require('express')
 const bodyParser = require("body-parser");
+const cookieParser = require("cookie-parser");
+const sessions = require('express-session');
 const ObjectId = require("mongodb").ObjectId;
+const app = express();
 
 
 const ID = "user";
@@ -24,6 +27,17 @@ app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
 app.use(cookieParser());
 app.set('view engine', 'ejs');
+var session;
+const oneDay = 1000 * 60 * 60 * 24;
+
+//session middleware
+app.use(sessions({
+    secret: "thisismysecrctekeyfhrgfgrfrty84fwir767",
+    saveUninitialized: true,
+    cookie: { maxAge: oneDay },
+    resave: false
+}));
+
 app.listen(PORT, function () {
     console.log(`App is listening on port ${PORT}`)
 })
@@ -145,37 +159,37 @@ app.get('/users/:id/podcasts/liked', (req, res) => {
 //========================================================================
 //API routes start
 //========================================================================
-app.get("/api", function(req,res){
-    db.collection("podcasts").find().sort({_id:-1}).limit(10).toArray(function (error, resp) {
+app.get("/api", function (req, res) {
+    db.collection("podcasts").find().sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         console.log(resp)
         res.json(resp);
     });
 })
 
-app.get("/api/search/keyword/:keyword", function(req,res){
-    db.collection("podcasts").find().sort({_id:-1}).limit(10).toArray(function (error, resp) {
+app.get("/api/search/keyword/:keyword", function (req, res) {
+    db.collection("podcasts").find().sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         keyword = req.params.keyword;
         let results = [];
         resp.forEach((podcast) => {
             if (
-                podcast.keywords.includes(keyword)||podcast.title.split(" ").includes(keyword)||podcast.authors.includes(keyword)
-            )results.push(podcast);
+                podcast.keywords.includes(keyword) || podcast.title.split(" ").includes(keyword) || podcast.authors.includes(keyword)
+            ) results.push(podcast);
         })
         //console.log(results)
         res.json(results);
     });
 })
-app.get("/api/search/date/:month/:day/:year", function(req,res){
+app.get("/api/search/date/:month/:day/:year", function (req, res) {
     date = `${req.params.month}/${req.params.day}/${req.params.year}`
-    db.collection("podcasts").find({publishDate:date}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+    db.collection("podcasts").find({ publishDate: date }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         console.log(resp)
         res.json(resp);
     });
 })
 
-app.get("/api/categories", async function(req,res){
+app.get("/api/categories", async function (req, res) {
     const pipeline = [
-        { $group: {category : "$journal", count: { $sum: 1 } } }
+        { $group: { category: "$journal", count: { $sum: 1 } } }
     ];
     const aggCursor = db.collection("podcasts").aggregate(pipeline);
     for await (const doc of aggCursor) {
@@ -184,37 +198,37 @@ app.get("/api/categories", async function(req,res){
     //res.render("pages/test",{data:disciplineArray});
 })
 
-app.get("/api/categories/:scientificdiscipline", function(req,res){
-    db.collection("podcasts").find({journal:req.params.scientificdiscipline}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+app.get("/api/categories/:scientificdiscipline", function (req, res) {
+    db.collection("podcasts").find({ journal: req.params.scientificdiscipline }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         console.log(resp);
         res.json(resp);
     })
 })
-app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", function(req,res){
+app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", function (req, res) {
     date = `${req.params.month}/${req.params.day}/${req.params.year}`
-    db.collection("podcasts").find({journal:req.params.scientificdiscipline,publishDate:date}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+    db.collection("podcasts").find({ journal: req.params.scientificdiscipline, publishDate: date }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         console.log(resp);
         res.json(resp);
     })
 })
 
-app.get("/api/keywords", async function(req,res){
+app.get("/api/keywords", async function (req, res) {
     const keywordArray = await db.collection("podcasts").distinct("keywords");
-    
+
     console.log(keywordArray);
     res.send(keywordArray)
     //res.render("pages/test",{data:disciplineArray});
 })
-app.get("/api/keywords/:keyword", function(req,res){
-    db.collection("podcasts").find({keywords:req.params.keyword}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+app.get("/api/keywords/:keyword", function (req, res) {
+    db.collection("podcasts").find({ keywords: req.params.keyword }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         console.log(resp);
         res.json(resp);
     })
 })
 
-app.get("/api/keywords/:keyword/search/date/:month/:day/:year", function(req,res){
+app.get("/api/keywords/:keyword/search/date/:month/:day/:year", function (req, res) {
     date = `${req.params.month}/${req.params.day}/${req.params.year}`
-    db.collection("podcasts").find({keywords:req.params.scientificdiscipline,publishDate:date}).sort({_id:-1}).limit(10).toArray(function (error, resp) {
+    db.collection("podcasts").find({ keywords: req.params.scientificdiscipline, publishDate: date }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         console.log(resp);
         res.json(resp);
     })
