@@ -58,6 +58,12 @@ app.get('/pages/:pagename', (req, resp) => {
 
 });
 
+//podcast route
+app.get("/pages/podcasts/:id", function (req, res) {
+    res.render("pages/podcasts", { data: req.params.id });
+})
+
+
 //keywords route
 app.get('/pages/keywordTag/:tag', (req, res) => {
     res.render("pages/keywordTag", { data: req.params.tag })
@@ -65,6 +71,10 @@ app.get('/pages/keywordTag/:tag', (req, res) => {
 //category route
 app.get('/pages/categoryTag/:tag', (req, res) => {
     res.render("pages/categoryTag", { data: req.params.tag })
+})
+
+app.get('/pages/podcasts/:tag', (req, res) => {
+    res.render("pages/podcasts", { data: req.params.tag })
 })
 
 //AUTHENTICATION
@@ -177,13 +187,21 @@ app.get("/api", function (req, res) {
     });
 })
 
+app.get("/api/podcast/search/:id", function (req, res) {
+    db.collection("podcasts").find({ id: parseInt(req.params.id) }).toArray(function (error, resp) {
+        res.json(resp);
+    })
+})
+
+
+
 app.get("/api/search/keyword/:keyword", function (req, res) {
     db.collection("podcasts").find().sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         keyword = req.params.keyword;
         let results = [];
         resp.forEach((podcast) => {
             if (
-                podcast.keywords.includes(keyword) || podcast.title.split(" ").includes(keyword) || podcast.authors.includes(keyword)
+                podcast.keywords.includes(keyword) || podcast.title.split(" ").includes(keyword) || podcast.authors.includes(keyword) || podcast._id == keyword
             ) results.push(podcast);
         })
         //console.log(results)
