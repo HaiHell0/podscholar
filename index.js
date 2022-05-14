@@ -161,17 +161,17 @@ app.get('/account/settings', (req, res) => {
 
 app.get('/users/:id/podcasts/authored', (req, res) => {
     //return a page displaying the user's uploadedPodcasts
-    res.send("Displaying user's all uploaded podcasts");
+    res.render("pages/userPodcasts.ejs", { page: "Uploaded Podcasts", id: req.params.id })
 })
 
 app.get('/users/:id/podcasts/saved', (req, res) => {
     //return a page displaying the user's savedPodcasts
-    res.send("Displaying user's all saved podcasts");
+    res.render("pages/userPodcasts.ejs", { page: "Saved Podcasts", id: req.params.id })
 })
 
 app.get('/users/:id/podcasts/liked', (req, res) => {
     //return a page displaying the user's savedPodcasts
-    res.send("Displaying user's all liked podcasts");
+    res.render("pages/userPodcasts.ejs", { page: "Liked Podcasts", id: req.params.id })
 })
 
 
@@ -408,7 +408,7 @@ app.get('/api/users/:id/podcasts/authored', (req, res) => {
         if (err) {
             res.send("Error");
         } else
-            res.send(resp.uploadedPodcasts);
+            res.send(resp.uploadedPodcast);
     })
 })
 
@@ -423,7 +423,7 @@ app.post('/api/account/upload/:podcastId', (req, res) => {
 })
 
 //user deletes an uploaded podcast
-app.delete('/api/account/delete/:podcastId', (req, res) => {
+app.post('/api/account/delete/:podcastId', (req, res) => {
     db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $pull: { "uploadedPodcast": req.params.podcastId } }, (err, resp) => {
         if (err) {
             res.send("Error");
@@ -435,17 +435,12 @@ app.delete('/api/account/delete/:podcastId', (req, res) => {
 
 //SAVE PODCAST FEATURE
 //Retrieves all the podcasts saved by a user
-app.get('/api/users/podcasts/saved', (req, res) => {
-    db.collection("users").findOne({ _id: ObjectId(req.session.userid) }, (err, resp) => {
-        console.log(req.session)
-        console.log(resp)
+app.get('/api/users/:id/podcasts/saved', (req, res) => {
+    db.collection("users").findOne({ _id: ObjectId(req.params.id) }, (err, resp) => {
         if (err) {
             res.send("Error");
-        } else if (resp.savedPodcast == null) {
-            res.send("null");
-        } else {
-            res.send(resp.savedPodcast)
-        }
+        } else
+            res.send(resp.savedPodcast);
     })
 })
 
@@ -476,7 +471,7 @@ app.get('/api/users/:id/podcasts/liked', (req, res) => {
         if (err) {
             res.send("Error");
         } else
-            res.send(resp.likedPodcasts);
+            res.send(resp.likedPodcast);
     })
 })
 
