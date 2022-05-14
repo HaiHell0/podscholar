@@ -188,7 +188,7 @@ app.get("/api", function (req, res) {
 })
 
 app.get("/api/podcast/search/:id", function (req, res) {
-    db.collection("podcasts").find({ id: parseInt(req.params.id) }).toArray(function (error, resp) {
+    db.collection("podcasts").find({$or:[{ id: parseInt(req.params.id) },{ _id: (new ObjectId(String(req.params.id)))}]}).toArray(function (error, resp) {
         res.json(resp);
     })
 })
@@ -501,6 +501,15 @@ app.post('/api/users/actions/unlike/:id', (req, res) => {
     })
 })
 
+
+//api routes for podcast
+app.post('/api/podcast/upload', (req, res) => {
+    db.collection('podcasts').insertOne(req.body, (err, resp) => {
+        console.log(err)
+        console.log(req.body)
+        res.sendStatus(200);
+    })
+})
 
 
 //========================================================================

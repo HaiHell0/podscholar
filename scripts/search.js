@@ -50,64 +50,6 @@ function search(search) {
   });
 }
 
-
-// $(document).on("click", "#savep", function (e) {
-//   e.preventDefault();
-//   e.stopPropagation();
-//   var podcast_id = $(this).val();
-//   if (window.sessionStorage.getItem("userId") == null) {
-//     alert("You are not logged in");
-//     window.location.href = "index.html";
-//   }
-//   $.ajax({
-//     url: `${baseURL}/accounts/${window.sessionStorage.userId}`,
-//     type: "GET",
-//     success: function (data) {
-//       list = [].concat(data.savedpcs);
-//       if (!list.includes(podcast_id)) list.push(podcast_id);
-//       list = { savedpcs: list };
-//       $.ajax({
-//         traditional: true,
-//         url: `${baseURL}/accounts/${window.sessionStorage.userId}`,
-//         type: "PATCH",
-//         data: list,
-//         dataType: "json",
-//         success: function (data) {
-//           console.log(data);
-//         },
-//       });
-//     },
-//   });
-// });
-// $(document).on("click", "#like", function (e) {
-//   e.preventDefault();
-//   e.stopPropagation();
-//   var podcast_id = $(this).val();
-//   if (window.sessionStorage.getItem("userId") == null) {
-//     alert("You are not logged in");
-//     window.location.href = "index.html";
-//   }
-//   $.ajax({
-//     url: `${baseURL}/podcasts/${podcast_id}`,
-//     type: "GET",
-//     success: function (data) {
-//       like = parseInt(data.likes) + 1;
-//       temp = { likes: like }
-
-//       $.ajax({
-//         traditional: true,
-//         url: `${baseURL}/podcasts/${podcast_id}`,
-//         type: "PATCH",
-//         data: temp,
-//         dataType: "json",
-//         success: function (data) {
-//           console.log(data);
-//         },
-//       });
-//     },
-//   });
-// });
-
 $(document).on("click", "#savep", function (e) {
   e.preventDefault();
   e.stopPropagation();

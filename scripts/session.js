@@ -16,7 +16,7 @@ function setUserDashboard(userId) {
   $("#register").remove();
   $("#login").remove();
   $(".navbar-right").append(`<li id="upload" class="nav-item">
-    <a class="nav-link" href="upload.html">Upload Podcast</a>
+    <a class="nav-link" href="/pages/upload">Upload Podcast</a>
       </li>`);
   $(".navbar-right").append(`<li id="account" class="nav-item">
       <a class="nav-link" href="/users/${userId}">Your Profile</a>
