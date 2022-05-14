@@ -19,11 +19,19 @@ $("#upload-form").on("submit", function (e) {
   
 });
 
+
+
 function uploadPodcast(article_title, journal, publish_date, DOI, keywords, audio_file, abstract) {
+  $.ajax(`/api/users/${window.sessionStorage.getItem("userId")}`, {
+    type: "GET",
+    data: {},
+    success : function(res){
+      console.log(res)
+      
   $.ajax(`/api/podcast/upload`, {
     type: "POST",
     data: {
-      authors:window.sessionStorage.getItem("userId"),
+      authors:{id:window.sessionStorage.getItem("userId"),name:res.lname},
       title: article_title,
       journal:journal,
       publish_date: publish_date,
@@ -44,13 +52,25 @@ function uploadPodcast(article_title, journal, publish_date, DOI, keywords, audi
         <h3 class="text-center mt-4">Your podcast ${article_title} has been uploaded</h3>
         </div>`
       )
-     
+      $.ajax(`/api/account/upload/${DOI}`, {
+        type: "POST",
+        data:{},
+        success: function(){},
+        error:function(err){console.log(err)}
+      })
+
     },
     error: function (errorMessage) {
       alert("Something went wrong")
       console.log("Error" + errorMessage);
     },
   });
+  
+    },
+    error: function(errorMessage){
+      console.log(errorMessage)
+    }
+  })
 }
 
 function checkSession() {

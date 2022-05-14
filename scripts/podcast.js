@@ -28,7 +28,7 @@ function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
           <div class="item col-md-6 mx-auto m-3 p-4 bg-light">
             <p class="fs-5"><strong><a class="text-decoration-none text-reset" href="/pages/podcasts/${podcast._id}">${podcast.title}</a></strong></p>
             <div>
-              <p><strong>By: </strong><a class="text-dark" href="/users/${podcast.author.id}">${podcast.author.name}</a></p>
+              <p><strong>By: </strong><a class="text-dark" href="/users/${podcast.authors.id}">${podcast.authors.name}</a></p>
               <p><strong>Journal: </strong>${podcast.journal}</p>
               <p><strong>DOI: ${podcast.doi}</strong></p>
               <p><strong>Date uploaded: </strong>${podcast.publishDate}</p>

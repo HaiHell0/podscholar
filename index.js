@@ -413,12 +413,13 @@ app.get('/api/users/:id/podcasts/authored', (req, res) => {
 })
 
 //user uploads a podcast
-app.post('/api/account/upload/:podcastId', (req, res) => {
-    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $push: { "uploadedPodcast": req.params.podcastId } }, (err, resp) => {
+app.post('/api/account/upload/:DOI', (req, res) => {
+    db.collection("podcasts").findOne({doi:req.params.DOI}, (err, resp) => {
         if (err) {
             res.send("Error");
         } else
-            res.send("podcast uploaded!");
+            
+            res.send(resp);
     })
 })
 
