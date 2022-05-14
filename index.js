@@ -4,7 +4,7 @@ const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const sessions = require('express-session');
 const ObjectId = require("mongodb").ObjectId;
-const app = express();
+var app = express();
 
 
 const ID = "user";
@@ -22,6 +22,7 @@ MongoClient.connect(URL, { useUnifiedTopology: true }, function (error, client) 
 });
 const PORT = process.env.PORT || 5500
 
+app = express();
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
@@ -57,6 +58,15 @@ app.get('/pages/:pagename', (req, resp) => {
 
 });
 
+//keywords route
+app.get('/pages/keywordTag/:tag', (req, res) => {
+    res.render("pages/keywordTag", { data: req.params.tag })
+})
+//category route
+app.get('/pages/categoryTag/:tag', (req, res) => {
+    res.render("pages/categoryTag", { data: req.params.tag })
+})
+
 //AUTHENTICATION
 app.get('/auth/signup', (req, res) => {
     if (req.session.userid) {
@@ -76,6 +86,7 @@ app.get('/auth/logout', (req, res) => {
     req.session.destroy();
     res.redirect('/');
 })
+
 
 //AUTHOR ACCOUNT APPROVAL
 app.get('/authors/create', (req, res) => {
@@ -188,15 +199,19 @@ app.get("/api/search/date/:month/:day/:year", function (req, res) {
 })
 
 app.get("/api/categories", async function (req, res) {
+    array = [];
     const pipeline = [
-        { $group: { category: "$journal", count: { $sum: 1 } } }
+        { $group: { _id: "$journal", count: { $sum: 1 } } }
     ];
-    const aggCursor = db.collection("podcasts").aggregate(pipeline);
-    for await (const doc of aggCursor) {
-        console.log(doc);
+    const aggCursor = await db.collection("podcasts").aggregate(pipeline);
+    for await (doc of aggCursor) {
+        array.push(doc)
     }
+    console.log(array)
+    res.json(array)
     //res.render("pages/test",{data:disciplineArray});
 })
+
 
 app.get("/api/categories/:scientificdiscipline", function (req, res) {
     db.collection("podcasts").find({ journal: req.params.scientificdiscipline }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
@@ -213,10 +228,17 @@ app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", f
 })
 
 app.get("/api/keywords", async function (req, res) {
-    const keywordArray = await db.collection("podcasts").distinct("keywords");
-
-    console.log(keywordArray);
-    res.send(keywordArray)
+    array1 = [];
+    const pipeline1 = [
+        { $unwind: "$keywords" },
+        { $group: { _id: "$keywords", count: { $sum: 1 } } }
+    ];
+    const aggCursor1 = await db.collection("podcasts").aggregate(pipeline1);
+    for await (doc of aggCursor1) {
+        array1.push(doc)
+    }
+    console.log(array1)
+    res.json(array1)
     //res.render("pages/test",{data:disciplineArray});
 })
 app.get("/api/keywords/:keyword", function (req, res) {
@@ -395,18 +417,23 @@ app.delete('/api/account/delete/:podcastId', (req, res) => {
 
 //SAVE PODCAST FEATURE
 //Retrieves all the podcasts saved by a user
-app.get('/api/users/:id/podcasts/saved', (req, res) => {
-    db.collection("users").findOne({ _id: ObjectId(req.params.id) }, (err, resp) => {
+app.get('/api/users/podcasts/saved', (req, res) => {
+    db.collection("users").findOne({ _id: ObjectId(req.session.userid) }, (err, resp) => {
+        console.log(req.session)
+        console.log(resp)
         if (err) {
             res.send("Error");
-        } else
-            res.send(resp.savedPodcasts);
+        } else if (resp.savedPodcast == null) {
+            res.send("null");
+        } else {
+            res.send(resp.savedPodcast)
+        }
     })
 })
 
 //user saves a podcast
-app.post('/api/account/save/:podcastId', (req, res) => {
-    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $push: { "savedPodcast": req.params.podcastId } }, (err, resp) => {
+app.post('/api/users/actions/save/:id', (req, res) => {
+    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $push: { "savedPodcast": req.params.id } }, (err, resp) => {
         if (err) {
             res.send("Error");
         } else
@@ -415,8 +442,8 @@ app.post('/api/account/save/:podcastId', (req, res) => {
 })
 
 //user unsaves a podcast
-app.delete('/api/account/unsave/:podcastId', (req, res) => {
-    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $pull: { "savedPodcast": req.params.podcastId } }, (err, resp) => {
+app.post('/api/users/actions/unsave/:id', (req, res) => {
+    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $pull: { "savedPodcast": req.params.id } }, (err, resp) => {
         if (err) {
             res.send("Error");
         } else
@@ -436,18 +463,19 @@ app.get('/api/users/:id/podcasts/liked', (req, res) => {
 })
 
 //user likes a podcast
-app.post('/api/account/like/:podcastId', (req, res) => {
-    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $push: { "likedPodcast": req.params.podcastId } }, (err, resp) => {
+app.post('/api/users/actions/like/:id', (req, res) => {
+    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $push: { "likedPodcast": req.params.id } }, (err, resp) => {
         if (err) {
             res.send("Error");
-        } else
+        } else {
             res.send("podcast liked!");
+        }
     })
 })
 
 //user unlikes a podcast
-app.delete('/api/account/unlike/:podcastId', (req, res) => {
-    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $pull: { "savedPodcast": req.params.podcastId } }, (err, resp) => {
+app.post('/api/users/actions/unlike/:id', (req, res) => {
+    db.collection("users").updateOne({ _id: ObjectId(req.session.userid) }, { $pull: { "likedPodcast": req.params.id } }, (err, resp) => {
         if (err) {
             res.send("Error");
         } else
