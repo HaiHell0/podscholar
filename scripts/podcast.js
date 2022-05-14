@@ -3,16 +3,15 @@ function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
   for (var i = 0; i < num; i++) {
     var podcast = res[i];
     var authorsString = "";
-    podcast.authors.forEach((author) => {
-      authorsString += `<a class="text-dark" href="author.html?index=${author}">${author}</a>\t`;
-    });
+    // podcast.authors.forEach((author) => {
+    //   authorsString += `<a class="text-dark" href="author.html?index=${author}">${author}</a>\t`;
+    // });
     var tagString = "";
     podcast.keywords.forEach((tag) => {
       tagString += `<a href="/pages/keywordTag/${tag}"><span class="btn btn-dark btn-sm label label-info">${tag}</span></a>`;
     });
     var saveButton = "";
     if (savedPodcast.includes(podcast._id)) {
-      console.log(savedPodcast);
       saveButton = "Saved";
     } else {
       saveButton = "Save"
@@ -29,7 +28,7 @@ function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
           <div class="item col-md-6 mx-auto m-3 p-4 bg-light">
             <p class="fs-5"><strong><a class="text-decoration-none text-reset" href="/pages/podcasts/${podcast._id}">${podcast.title}</a></strong></p>
             <div>
-              <p><strong>By: </strong>${authorsString}</p>
+              <p><strong>By: </strong><a class="text-dark" href="/users/${podcast.author.id}">${podcast.author.name}</a></p>
               <p><strong>Journal: </strong>${podcast.journal}</p>
               <p><strong>DOI: ${podcast.doi}</strong></p>
               <p><strong>Date uploaded: </strong>${podcast.publishDate}</p>

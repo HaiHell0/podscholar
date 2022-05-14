@@ -135,7 +135,7 @@
                                     <p class="mb-0">Authored Podcasts</p>
                                     <% if (user.uploadedPodcast) { %>
                                     <p class="text-muted mb-0 d-inline"><a class="btn btn-outline-dark"
-                                            href="/users/:id/podcasts/authored"><%= user.uploadedPodcast.length %></a>
+                                            href="/users/<%= user._id %>/podcasts/authored"><%= user.uploadedPodcast.length %></a>
                                     </p>
                                     <% } else { %>
                                     <p class="text-muted mb-0 d-inline"><a class="btn btn-outline-dark" href="#">0</a>
@@ -149,7 +149,7 @@
                                     <p class="mb-0">Saved Podcasts</p>
                                     <% if (user.savedPodcast) { %>
                                     <p class="text-muted mb-0 d-inline"><a class="btn btn-outline-dark"
-                                            href="/users/:id/podcasts/saved"><%= user.savedPodcast.length %></a>
+                                            href="/users/<%= user._id %>/podcasts/saved"><%= user.savedPodcast.length %></a>
                                     </p>
                                     <% } else { %>
                                     <p class="text-muted mb-0 d-inline"><a class="btn btn-outline-dark" href="#">0</a>
@@ -160,7 +160,7 @@
                                     <p class="mb-0">Liked Podcasts</p>
                                     <% if (user.likedPodcast) { %>
                                     <p class="text-muted mb-0 d-inline"><a class="btn btn-outline-dark"
-                                            href="/users/:id/podcasts/liked"><%= user.likedPodcast.length %></a>
+                                            href="/users/<%= user._id %>/podcasts/liked"><%= user.likedPodcast.length %></a>
                                     </p>
                                     <% } else { %>
                                     <p class="text-muted mb-0 d-inline"><a class="btn btn-outline-dark" href="#">0</a>
