@@ -55,8 +55,14 @@ app.get('/pages', (req, resp) => {
 app.get('/pages/:pagename', (req, resp) => {
     console.log(`pages/${req.params.pagename}`)
     resp.render(`pages/${req.params.pagename}`)
+});
+
+app.get('/pages/static/:pagename', (req, resp) => {
+    console.log(`pages/static/${req.params.pagename}`)
+    resp.render(`pages/static/${req.params.pagename}`)
 
 });
+
 
 //podcast route
 app.get("/pages/podcasts/:id", function (req, res) {
@@ -412,16 +418,7 @@ app.get('/api/users/:id/podcasts/authored', (req, res) => {
     })
 })
 
-//user uploads a podcast
-app.post('/api/account/upload/:DOI', (req, res) => {
-    db.collection("podcasts").findOne({doi:req.params.DOI}, (err, resp) => {
-        if (err) {
-            res.send("Error");
-        } else
-            
-            res.send(resp);
-    })
-})
+
 
 //user deletes an uploaded podcast
 app.post('/api/account/delete/:podcastId', (req, res) => {
@@ -511,3 +508,17 @@ app.post('/api/podcast/upload', (req, res) => {
 //========================================================================
 //API routes end
 //========================================================================
+
+//TO BE FINISHED
+//user uploads a podcast
+app.get('/api/account/upload/:DOI', (req, res) => {
+    db.collection("podcasts").findOne({doi:req.params.DOI}, (err, resp) => {
+        if (err) {
+            res.send("Error");
+        } else
+            console.log(req.session.userid)
+            db.collection("users").updateOne({_id: ObjectId(req.session.userid)}, (err,resp)=>{
+            })
+            res.send(resp);
+    })
+})

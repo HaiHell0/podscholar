@@ -1,4 +1,9 @@
-function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
+//=======================================================================================================================
+//DO NOT TOUCH
+//=======================================================================================================================
+
+
+function podcastArrayToString(res, num) {
   if (num == 0) num = res.length;
   for (var i = 0; i < num; i++) {
     var podcast = res[i];
@@ -10,6 +15,7 @@ function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
     podcast.keywords.forEach((tag) => {
       tagString += `<a href="/pages/keywordTag/${tag}"><span class="btn btn-dark btn-sm label label-info">${tag}</span></a>`;
     });
+    /*
     var saveButton = "";
     if (savedPodcast.includes(podcast._id)) {
       saveButton = "Saved";
@@ -23,6 +29,7 @@ function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
       likeButton = "Like";
     }
     //console.log(authorsString)
+    */
     $("#search-results").append(
       `
           <div class="item col-md-6 mx-auto m-3 p-4 bg-light">
@@ -34,8 +41,8 @@ function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
               <p><strong>Date uploaded: </strong>${podcast.publishDate}</p>
             </div>
             <div>
-            <button type="button" class="btn btn-dark btn-sm" value="${podcast._id}" id="like">${likeButton}</button>
-            <button type="button" class="btn btn-secondary btn-sm" value="${podcast._id}" id="savep">${saveButton}</button>
+            <button type="button" class="btn btn-dark btn-sm" value="${podcast._id}" id="like">Like</button>
+            <button type="button" class="btn btn-secondary btn-sm" value="${podcast._id}" id="savep">Save</button>
             </div>
             <p><br><strong>Abstract:</strong> ${podcast.abstract}</p>
             <div class="player mt-4">
@@ -72,3 +79,6 @@ function podcastArrayToString(res, num, savedPodcast, likedPodcast) {
     );
   }
 }
+//=======================================================================================================================
+//DO NOT TOUCH
+//=======================================================================================================================
