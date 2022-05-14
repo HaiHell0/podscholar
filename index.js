@@ -47,40 +47,40 @@ app.use(express.static(__dirname));
 
 
 app.get('/', (req, res) => {
-    res.sendStatus(200).render("pages/index.ejs");
+    res.render("pages/index.ejs");
 });
 app.get('/pages', (req, resp) => {
-    resp.sendStatus(200).send('ok')
+    resp.send('ok')
 });
 app.get('/pages/:pagename', (req, resp) => {
     console.log(`pages/${req.params.pagename}`)
-    resp.sendStatus(200).render(`pages/${req.params.pagename}`)
+    resp.render(`pages/${req.params.pagename}`)
 });
 
 app.get('/pages/static/:pagename', (req, resp) => {
     console.log(`pages/static/${req.params.pagename}`)
-    resp.sendStatus(200).render(`pages/static/${req.params.pagename}`)
+    resp.render(`pages/static/${req.params.pagename}`)
 
 });
 
 
 //podcast route
 app.get("/pages/podcasts/:id", function (req, res) {
-    res.sendStatus(200).render("pages/podcasts", { data: req.params.id });
+    res.render("pages/podcasts", { data: req.params.id });
 })
 
 
 //keywords route
 app.get('/pages/keywordTag/:tag', (req, res) => {
-    res.sendStatus(200).render("pages/keywordTag", { data: req.params.tag })
+    res.render("pages/keywordTag", { data: req.params.tag })
 })
 //category route
 app.get('/pages/categoryTag/:tag', (req, res) => {
-    res.sendStatus(200).render("pages/categoryTag", { data: req.params.tag })
+    res.render("pages/categoryTag", { data: req.params.tag })
 })
 
 app.get('/pages/podcasts/:tag', (req, res) => {
-    res.sendStatus(200).render("pages/podcasts", { data: req.params.tag })
+    res.render("pages/podcasts", { data: req.params.tag })
 })
 
 //AUTHENTICATION
@@ -88,19 +88,19 @@ app.get('/auth/signup', (req, res) => {
     if (req.session.userid) {
         res.send("You are already signed up, <a href=\'/'>click here to go homepage</a>");
     } else
-        res.sendStatus(200).render('pages/register.ejs');
+        res.render('pages/register.ejs');
 })
 
 app.get('/auth/signin', (req, res) => {
     if (req.session.userid) {
         res.send(`You are already signed in, <a href='/'>click here go to homepage</a>`);
     } else
-        res.sendStatus(200).render('pages/login.ejs');
+        res.render('pages/login.ejs');
 })
 
 app.get('/auth/logout', (req, res) => {
     req.session.destroy();
-    res.sendStatus(200).redirect('/');
+    res.redirect('/');
 })
 
 
@@ -119,9 +119,9 @@ app.get('/authors/create', (req, res) => {
 app.get('/users/:id', (req, res) => {
     db.collection("users").findOne({ _id: ObjectId(req.params.id) }, (err, resp) => {
         if (err) {
-            res.sendStatus(403).send("Error");
+            res.send("Error");
         } else {
-            res.sendStatus(200).render('pages/user.ejs', { user: resp });
+            res.render('pages/user.ejs', { user: resp });
         }
     })
 })
@@ -130,9 +130,9 @@ app.get('/account', (req, res) => {
     if (req.session.userid) {
         db.collection("users").findOne({ _id: ObjectId(req.session.userid) }, (err, resp) => {
             if (err) {
-                res.sendStatus(500).send("Error");
+                res.send("Error");
             } else {
-                res.sendStatus(200).render('pages/account.ejs', { user: resp });
+                res.render('pages/account.ejs', { user: resp });
             }
         })
     } else
@@ -143,9 +143,9 @@ app.get('/account/details', (req, res) => {
     if (req.session.userid) {
         db.collection("users").findOne({ _id: ObjectId(req.session.userid) }, (err, resp) => {
             if (err) {
-                res.sendStatus(500).send("Error");
+                res.send("Error");
             } else {
-                res.sendStatus(200).render('pages/accountDetails.ejs', { user: resp });
+                res.render('pages/accountDetails.ejs', { user: resp });
             }
         })
     } else
@@ -156,9 +156,9 @@ app.get('/account/settings', (req, res) => {
     if (req.session.userid) {
         db.collection("users").findOne({ _id: ObjectId(req.session.userid) }, (err, resp) => {
             if (err) {
-                res.sendStatus(500).send("Error");
+                res.send("Error");
             } else {
-                res.sendStatus(200).render('pages/accountSettings.ejs', { user: resp });
+                res.render('pages/accountSettings.ejs', { user: resp });
             }
         })
     } else
@@ -167,17 +167,17 @@ app.get('/account/settings', (req, res) => {
 
 app.get('/users/:id/podcasts/authored', (req, res) => {
     //return a page displaying the user's uploadedPodcasts
-    res.sendStatus(200).render("pages/userPodcasts.ejs", { page: "Uploaded Podcasts", id: req.params.id })
+    res.render("pages/userPodcasts.ejs", { page: "Uploaded Podcasts", id: req.params.id })
 })
 
 app.get('/users/:id/podcasts/saved', (req, res) => {
     //return a page displaying the user's savedPodcasts
-    res.sendStatus(200).render("pages/userPodcasts.ejs", { page: "Saved Podcasts", id: req.params.id })
+    res.render("pages/userPodcasts.ejs", { page: "Saved Podcasts", id: req.params.id })
 })
 
 app.get('/users/:id/podcasts/liked', (req, res) => {
     //return a page displaying the user's savedPodcasts
-    res.sendStatus(200).render("pages/userPodcasts.ejs", { page: "Liked Podcasts", id: req.params.id })
+    res.render("pages/userPodcasts.ejs", { page: "Liked Podcasts", id: req.params.id })
 })
 
 
@@ -190,10 +190,10 @@ app.get("/api", function (req, res) {
     db.collection("podcasts").find().sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404).send("Not found")
+            res.send("Not found")
         }
         console.log(resp)
-        res.sendStatus(200).json(resp);
+        res.json(resp);
     });
 })
 
@@ -201,9 +201,9 @@ app.get("/api/podcast/search/:id", function (req, res) {
     db.collection("podcasts").find({$or:[{ id: parseInt(req.params.id) },{ _id: (new ObjectId(String(req.params.id)))}]}).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404).send("Not found")
+            res.send("Not found")
         }
-        res.sendStatus(200).json(resp);
+        res.json(resp);
     })
 })
 
@@ -213,7 +213,7 @@ app.get("/api/search/keyword/:keyword", function (req, res) {
     db.collection("podcasts").find().sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404).send(error)
+            res.send(error)
         }
         keyword = req.params.keyword;
         let results = [];
@@ -231,10 +231,10 @@ app.get("/api/search/date/:month/:day/:year", function (req, res) {
     db.collection("podcasts").find({ publishDate: date }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404).send(error)
+            res.send(error)
         }
         console.log(resp)
-        res.sendStatus(200).json(resp);
+        res.json(resp);
     });
 })
 
@@ -249,11 +249,11 @@ app.get("/api/categories", async function (req, res) {
         array.push(doc)
     }
     console.log(array)
-    res.sendStatus(200).json(array)
+    res.json(array)
     }
     catch(error){
         console.log(error);
-        res.sendStatus(404).send(error);
+        res.send(error);
     }
     //res.render("pages/test",{data:disciplineArray});
 })
@@ -263,10 +263,10 @@ app.get("/api/categories/:scientificdiscipline", function (req, res) {
     db.collection("podcasts").find({ journal: req.params.scientificdiscipline }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404).send(error);
+            res.send(error);
         }
         console.log(resp);
-        res.sendStatus(200).json(resp);
+        res.json(resp);
     })
 })
 app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", function (req, res) {
@@ -274,10 +274,10 @@ app.get("/api/categories/:scientificdiscipline/search/date/:month/:day/:year", f
     db.collection("podcasts").find({ journal: req.params.scientificdiscipline, publishDate: date }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404).send(error)
+            res.send(error)
         }
         console.log(resp);
-        res.sendStatus(200).json(resp);
+        res.json(resp);
     })
 })
 
@@ -293,11 +293,11 @@ app.get("/api/keywords", async function (req, res) {
         array1.push(doc)
     }
     console.log(array1)
-    res.sendStatus(200).json(array1)
+    res.json(array1)
     }
     catch(error){
         console.log(error);
-        res.sendStatus(404).send(error)
+        res.send(error)
     }
     //res.render("pages/test",{data:disciplineArray});
 })
@@ -305,7 +305,7 @@ app.get("/api/keywords/:keyword", function (req, res) {
     db.collection("podcasts").find({ keywords: req.params.keyword }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404)
+            res.send(error)
         }
         console.log(resp);
         res.json(resp);
@@ -317,10 +317,10 @@ app.get("/api/keywords/:keyword/search/date/:month/:day/:year", function (req, r
     db.collection("podcasts").find({ keywords: req.params.scientificdiscipline, publishDate: date }).sort({ _id: -1 }).limit(10).toArray(function (error, resp) {
         if(error){
             console.log(error);
-            res.sendStatus(404).send(error)
+            res.send(error)
         }
         console.log(resp);
-        res.sendStatus(200).json(resp);
+        res.json(resp);
     })
 })
 
@@ -331,13 +331,13 @@ app.get("/api/keywords/:keyword/search/date/:month/:day/:year", function (req, r
 app.post('/api/auth/signup', (req, res) => {
     db.collection("users").findOne({ email: req.body.email }, (err, resp) => {
         if (resp != null) {
-            res.sendStatus(404).send("Email already exists");
+            res.send("Email already exists");
         } else {
             db.collection('users').insertOne(req.body, (err, resp) => {
                 session = req.session;
                 session.userid = resp.insertedId.toString();
                 console.log(req.session);
-                res.sendStatus(200).send(resp.insertedId);
+                res.send(resp.insertedId);
             })
         }
     })
@@ -544,7 +544,7 @@ app.post('/api/podcast/upload', (req, res) => {
     db.collection('podcasts').insertOne(req.body, (err, resp) => {
         console.log(err)
         console.log(req.body)
-        res.sendStatus(200);
+        res;
     })
 })
 
